@@ -1,0 +1,24 @@
+{
+  "name": "uberlax",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/uberlax.js",
+  "scripts": {
+    "build": "parcel build ./src/index.js --global uberlax --out-file uberlax.js",
+    "start": "parcel index.html --out-dir ./demo",
+    "build-demo": "rm -rf ./demo-dist && parcel build index.html --cache-dir ./.cache-demo-dist --out-dir ./demo-dist --public-url ./",
+    "benchmark": "parcel ./benchmark/index.html --cache-dir ./.cache-benchmark-dist --out-dir ./benchmark-dist"
+  },
+  "author": "Julian Hollmann <julian@fwdoperating.com>",
+  "devDependencies": {
+    "@babel/core": "^7.1.6",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "parcel-bundler": "^1.10.3",
+    "sass": "^1.15.1"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.1.5",
+    "babel-polyfill": "^6.26.0"
+  }
+}
