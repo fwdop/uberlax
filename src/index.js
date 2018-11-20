@@ -14,16 +14,29 @@ const init = async (elem, config) => {
 
   const canvas = global.document.createElement('canvas');
 
-  let { width, height, top: initialTop } = elem.getBoundingClientRect();
+  let dpr = 1;
 
-  height = Math.ceil(height);
-  width = Math.ceil(width);
-  initialTop = Math.max(initialTop, 0);
-
-  canvas.height = height;
-  canvas.width = width;
+  if (config.detectHighDpi) {
+    dpr = window.devicePixelRatio;
+  }
 
   const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const recalculate = () => {
+    let { width, height } = elem.getBoundingClientRect();
+
+    height = Math.ceil(height);
+    width = Math.ceil(width);
+    const initialTop = Math.max(initialTop, 0);
+
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    renderer.render(scrollPercentage);
+  };
+
+  window.addEventListener('resize', recalculate);
 
   elem.appendChild(canvas);
 
@@ -69,8 +82,7 @@ const init = async (elem, config) => {
   }
 
   renderer.onLoad().then(() => {
-    updateScroll(1);
-    renderer.render(scrollPercentage);
+    recalculate();
   });
 
   if (config.update !== false) {
@@ -80,11 +92,9 @@ const init = async (elem, config) => {
 }
 
 module.exports = (elem, passedConfig) => {
-
   if (!elem) {
     throw new Error('No element was passed to uberlax');
   }
-
 
   const defaultConfig = {
     enableWasm: false,
