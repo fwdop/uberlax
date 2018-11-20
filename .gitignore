@@ -1,3 +1,4 @@
 .cache*
 demo
 demo-dist
+dist*

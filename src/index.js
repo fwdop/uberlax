@@ -2,19 +2,8 @@ import createRenderer from './renderer';
 import createMath from './math';
 import createObserver from './observer';
 
-export default async (elem, passedConfig) => {
-  const defaultConfig = {
-    enableWasm: false,
-    observer: 'scroll'
-  };
-
-  const config = {
-    ...defaultConfig,
-    ...passedConfig
-  }
-
+const init = async (elem, config) => {
   const math = await createMath(config.enableWasm);
-
   const Renderer = createRenderer(math);
 
   let loopStarted = false;
@@ -88,4 +77,24 @@ export default async (elem, passedConfig) => {
     const observer = await createObserver(config.observer);
     observer(elem, math, updateScroll);
   }
+}
+
+module.exports = (elem, passedConfig) => {
+
+  if (!elem) {
+    throw new Error('No element was passed to uberlax');
+  }
+
+
+  const defaultConfig = {
+    enableWasm: false,
+    observer: 'scroll'
+  };
+
+  const config = {
+    ...defaultConfig,
+    ...passedConfig
+  }
+
+  init(elem, config);
 };

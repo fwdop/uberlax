@@ -1,44 +1,40 @@
-
 <body style="height: 200vh">
-  <div
-    style="width: 100vh; height: 100vh"
-    id="uberlax-container"
-  ></div>
+  <div style="width: 100vh; height: 100vh" id="uberlax-container"></div>
   <script src="./dist/uberlax.js"></script>
   <script>
     uberlax(document.getElementById('uberlax-container'), {
-    enableWasm: false,
-    debug: false,
-    images: [
-      {
-        src: './images/space/logo.png',
-        scale: 'contain',
-        animation: {
-          moveY: 400,
-          fadeOut: 0
+      enableWasm: false,
+      debug: false,
+      images: [
+        {
+          src: './images/space/logo.png',
+          scale: 'contain',
+          animation: {
+            moveY: 400,
+            fadeOut: 0
+          }
+        },
+        {
+          src: './images/space/overlay_1.png',
+          animation: {
+            moveY: 200,
+            fadeOut: 0
+          }
+        },
+        {
+          src: './images/space/overlay_2.png',
+          animation: {
+            moveY: 400,
+            fadeIn: 1
+          }
+        },
+        {
+          src: './images/space/image_1.jpeg',
+          animation: {
+            moveY: 800
+          }
         }
-      },
-      {
-        src: './images/space/overlay_1.png',
-        animation: {
-          moveY: 200,
-          fadeOut: 0
-        }
-      },
-      {
-        src: './images/space/overlay_2.png',
-        animation: {
-          moveY: 400,
-          fadeIn: 1
-        }
-      },
-      {
-        src: './images/space/image_1.jpeg',
-        animation: {
-          moveY: 800
-        }
-      }
-    ]
-  });
+      ]
+    });
   </script>
 </body>

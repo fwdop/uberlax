@@ -63,6 +63,12 @@ export default ({
           height: height * percentage / 100
         }
       }
+
+      const percentage = canvasHeight * 100 / height;
+        return {
+          width: width * percentage / 100,
+          height: canvasHeight
+        }
     }
 
     calculateSize(...args) {
