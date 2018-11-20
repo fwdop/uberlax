@@ -1,8 +1,14 @@
 # uberlax
 
-![demo]()
+![demo](https://github.com/fwdop/uberlax/raw/master/images/uberlax-demo.gif)
 
 A high-performance canvas based parallax library
+
+## Features
+- high-performance
+- Supported transitions: `moveX`, `moveY`, `fadeIn`, `fadeOut`
+- WebAssembly Support (experimental 🔥)
+- `<iframe>` support with `IntersectionObserver`
 
 ## Example
 
