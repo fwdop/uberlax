@@ -15,6 +15,7 @@ export default ({
       this._opts = {
         center: true,
         scale: 'cover',
+        padding: 0,
         ...opts,
         animation: {
           moveX: 0,
@@ -36,8 +37,15 @@ export default ({
       });
     }
 
+    get dimensions() {
+      return {
+        x: this.width,
+        y: this.height
+      }
+    }
+
     calculateSizeToCover(canvasWidth, canvasHeight) {
-      const { width, height } = this;
+      const { x: width, y: height } = this.dimensions;
       // performance todo: cache scaled width and height
 
       if (width >= height) {
@@ -54,21 +62,24 @@ export default ({
     }
 
     calculateSizeToContain(canvasWidth, canvasHeight) {
-      const { width, height } = this;
+      const { x: width, y: height } = this.dimensions;
+      const doublePadding = this._opts.padding * 2;
 
       if (width >= height) {
         const percentage = canvasWidth * 100 / width;
+        const ratioPercentage = height * 100 / width;
         return {
-          width: canvasWidth,
-          height: height * percentage / 100
+          width: canvasWidth - doublePadding,
+          height: height * percentage / 100 - (doublePadding) * (ratioPercentage / 100)
         }
       }
 
       const percentage = canvasHeight * 100 / height;
-        return {
-          width: width * percentage / 100,
-          height: canvasHeight
-        }
+      const ratioPercentage = width * 100 / height;
+      return {
+        width: width * percentage / 100 - (doublePadding) * (ratioPercentage / 100),
+        height: canvasHeight - doublePadding
+      }
     }
 
     calculateSize(...args) {
