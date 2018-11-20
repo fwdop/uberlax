@@ -19,5 +19,11 @@ module.exports = {
     const percentage = (visibleHeight * 100 / elementHeight);
 
     return Math.abs(percentage - 100);
+  },
+  calculateFadeOutOpacity(fadeOut, percentage) {
+    return (1 - fadeOut) / (100 / (100 - percentage));
+  },
+  calculateFadeInOpacity(fadeIn, percentage) {
+    return (fadeIn) / (100 / (percentage));
   }
 }

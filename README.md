@@ -1,6 +1,8 @@
 # uberlax
 
-A canvas based parallax library with experimental wasm feature.
+![demo]()
+
+A high-performance canvas based parallax library
 
 ## Example
 

@@ -1,9 +1,11 @@
 import createRenderer from './renderer';
 import createMath from './math';
+import createObserver from './observer';
 
 export default async (elem, passedConfig) => {
   const defaultConfig = {
-    enableWasm: false
+    enableWasm: false,
+    observer: 'scroll'
   };
 
   const config = {
@@ -37,13 +39,12 @@ export default async (elem, passedConfig) => {
   elem.appendChild(canvas);
 
   const renderer = new Renderer(ctx, config.images, {
-    ...(config.canvas || {}),
+    ...(config || {}),
     backgroundColor: 'rgba(255, 255, 255, 0)'
   });
 
-  const updateScroll = () => {
-    const { top } = elem.getBoundingClientRect();
-    scrollPercentage = math.calculateScrollPercentage(height, top);
+  const updateScroll = (passedScrollPercentage) => {
+    scrollPercentage = passedScrollPercentage;
 
     if (scrollPercentage === 0 || scrollPercentage > 100) {
       stopLoop();
@@ -78,12 +79,13 @@ export default async (elem, passedConfig) => {
     loopStarted = false;
   }
 
-  if (config.update !== false) {
-    window.addEventListener('scroll', () => updateScroll());
-  }
-
   renderer.onLoad().then(() => {
-    updateScroll();
+    updateScroll(1);
     renderer.render(scrollPercentage);
   });
+
+  if (config.update !== false) {
+    const observer = await createObserver(config.observer);
+    observer(elem, math, updateScroll);
+  }
 };

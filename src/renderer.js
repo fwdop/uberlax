@@ -1,7 +1,9 @@
 export default ({
   calculateWidthToCover,
   calculateHeightToCover,
-  calculatePositionByPercentage
+  calculatePositionByPercentage,
+  calculateFadeOutOpacity,
+  calculateFadeInOpacity
 }) => {
   class ImageComponent {
     constructor(path, opts) {
@@ -11,10 +13,14 @@ export default ({
       this.height = 0;
 
       this._opts = {
-        moveX: 0,
-        moveY: 0,
         center: true,
-        ...opts
+        scale: 'cover',
+        ...opts,
+        animation: {
+          moveX: 0,
+          moveY: 0,
+          ...opts.animation
+        }
       };
 
       this.startX = 0;
@@ -31,7 +37,7 @@ export default ({
     }
 
     calculateSizeToCover(canvasWidth, canvasHeight) {
-      let { width, height } = this;
+      const { width, height } = this;
       // performance todo: cache scaled width and height
 
       if (width >= height) {
@@ -47,30 +53,93 @@ export default ({
       }
     }
 
+    calculateSizeToContain(canvasWidth, canvasHeight) {
+      const { width, height } = this;
+
+      if (width >= height) {
+        const percentage = canvasWidth * 100 / width;
+        return {
+          width: canvasWidth,
+          height: height * percentage / 100
+        }
+      }
+    }
+
+    calculateSize(...args) {
+      if (this._opts.scale === 'cover') {
+        return this.calculateSizeToCover(...args);
+      }
+      if (this._opts.scale === 'contain') {
+        return this.calculateSizeToContain(...args);
+      }
+      throw new Error('`scale` must be either `cover` or `contain`')
+    }
+
     onLoad() {
       return this._loadPromise;
     }
 
-    render(ctx, scrollPercentage = 0) {
+    request(canvasHeight, canvasWidth, scrollPercentage = 0) {
+      const { width, height } = this.calculateSize(canvasWidth, canvasHeight);
+      const { animation, center } = this._opts;
+      const { moveY, moveX, fadeOut, fadeIn } = animation;
+      let {
+        startY: newPosY,
+        startX: newPosX
+      } = this;
+      let offsetY = 0;
+      let offsetX = 0;
+      let opacity = 1;
+
+      if (center) {
+        offsetY = -((height - canvasHeight) / 2);
+        offsetX = -((width - canvasWidth) / 2);
+      }
+
+      newPosY = calculatePositionByPercentage(newPosY + offsetY, moveY, scrollPercentage);
+      newPosX = calculatePositionByPercentage(newPosX + offsetX, moveX, scrollPercentage);
+
+      if (fadeOut < 1) {
+        opacity = calculateFadeOutOpacity(fadeOut, scrollPercentage);
+      }
+
+      if (fadeIn <= 1) {
+        opacity = calculateFadeInOpacity(fadeIn, scrollPercentage);
+      }
+
+      return {
+        x: newPosX,
+        y: newPosY,
+        width,
+        height,
+        opacity
+      }
+    }
+
+    render(ctx, scrollPercentage = 0, debug = false) {
       const canvasHeight = ctx.canvas.height;
       const canvasWidth = ctx.canvas.width;
 
-      const { width, height } = this.calculateSizeToCover(canvasWidth, canvasHeight);
-      const { moveY, center } = this._opts;
-      let { startY: newPosY } = this;
-      let newPosX = 0;
+      const { x, y, width, height, opacity } = this.request(
+        canvasHeight, canvasWidth, scrollPercentage
+      );
 
-      if (moveY > 0) {
-        newPosY = calculatePositionByPercentage(newPosY, moveY, scrollPercentage);
-      }
-
-      if (center && width > canvasWidth) {
-        newPosX = -((width - canvasWidth) / 2);
+      if (opacity < 1) {
+        ctx.globalAlpha = opacity;
       }
 
       ctx.drawImage(
-        this._image, newPosX, newPosY, width, height
+        this._image, x, y, width, height
       );
+
+      if (opacity < 1) {
+        ctx.globalAlpha = 1;
+      }
+
+      if (debug) {
+        ctx.strokeStyle = "rgb(200, 0, 0)";
+        ctx.strokeRect(x, y, width, height);
+      }
     }
   }
 
@@ -78,11 +147,12 @@ export default ({
     constructor(ctx, images, opts) {
       this._ctx = ctx;
       this._opts = opts;
+      this._debug = opts.debug || false;
       this._components = images.map((image) => {
         if (!image.src) {
           throw new Error('Image does not have a `src` property');
         }
-        return new ImageComponent(image.src, image.animation);
+        return new ImageComponent(image.src, image);
       }).reverse();
 
       this._loadPromise = Promise.all(this._components.map(image => image.onLoad()));
@@ -101,7 +171,7 @@ export default ({
       this._clearCanvas();
       this._paintBaseLayer();
       this._components.forEach(
-        element => element.render(this._ctx, scrollPercentage)
+        element => element.render(this._ctx, scrollPercentage, this._debug)
       );
     }
   }
