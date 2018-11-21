@@ -6,7 +6,9 @@ node_js:
 script:
 - npm run lint
 - npm run build-release
-before_deploy: npm run create-release-travis
+before_deploy:
+- npm run create-release-travis
+- npm run create-release-zip
 deploy:
   - provider: s3
     access_key_id: AKIAJ5ZQM32M7MGKTP6A
