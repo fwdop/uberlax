@@ -1,11 +1,28 @@
-module.exports = {
-  calculateWidthToCover: (elementWidth, elementHeight, canvasHeight) => {
-    const scalePercent = canvasHeight * 100.0 / elementHeight;
-    return elementWidth * scalePercent / 100.0;
+const ratios = {
+  cover: function (wRatio, hRatio) {
+    return Math.max(wRatio, hRatio);
   },
-  calculateHeightToCover: (elementWidth, elementHeight, canvasWidth) => {
-    const scalePercent = canvasWidth * 100.0 / elementWidth;
-    return elementHeight * scalePercent / 100.0;
+
+  contain: function (wRatio, hRatio) {
+    return Math.min(wRatio, hRatio);
+  },
+
+  stretch: function (wRatio, hRatio) {
+    return { width: wRatio, height: hRatio };
+  }
+};
+
+module.exports = {
+  getImageSize: (options) => {
+    const r = ratios[options.scale](
+      options.container.width / options.image.width,
+      options.container.height / options.image.height
+    );
+
+    return {
+      width: options.image.width * (r.width || r),
+      height: options.image.height * (r.height || r)
+    };
   },
   calculatePositionByPercentage: (start, moveTo, percentage) => {
     return (moveTo * percentage / 100.0) + start;

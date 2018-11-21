@@ -2,3 +2,6 @@
 demo
 demo-dist
 *dist*
+
+/target
+**/*.rs.bk

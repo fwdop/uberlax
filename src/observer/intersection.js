@@ -1,5 +1,4 @@
-module.exports = (elem, math, callback) => {
-  let lastEntries = [];
+module.exports = (elem, callback) => {
   function buildThresholdList() {
     var thresholds = [];
     var numSteps = 10000;
@@ -14,7 +13,6 @@ module.exports = (elem, math, callback) => {
   }
 
   function handleIntersect(entries) {
-    lastEntries = entries;
     const { top } = elem.getBoundingClientRect();
     if (top > 0) {
       return callback(0);

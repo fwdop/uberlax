@@ -1,10 +1,11 @@
-export default ({
-  calculateWidthToCover,
-  calculateHeightToCover,
+import {
+  getImageSize,
   calculatePositionByPercentage,
   calculateFadeOutOpacity,
   calculateFadeInOpacity
-}) => {
+} from './util/math';
+
+export default () => {
   class ImageComponent {
     constructor(path, opts) {
       this._image = new Image();
@@ -44,52 +45,21 @@ export default ({
       }
     }
 
-    calculateSizeToCover(canvasWidth, canvasHeight) {
+    calculateSize(canvasWidth, canvasHeight) {
       const { x: width, y: height } = this.dimensions;
-      // performance todo: cache scaled width and height
 
-      if (width >= height) {
-        return {
-          width: calculateWidthToCover(width, height, canvasHeight),
+      if (['contain', 'cover', 'stretch'].indexOf(this._opts.scale) === -1) {
+        throw new Error('`scale` must be either `cover`, `contain` or `stretch`');
+      }
+
+      return getImageSize({
+        scale: this._opts.scale,
+        container: {
+          width: canvasWidth,
           height: canvasHeight
-        }
-      }
-
-      return {
-        width: canvasWidth,
-        height: calculateHeightToCover(width, height, canvasWidth)
-      }
-    }
-
-    calculateSizeToContain(canvasWidth, canvasHeight) {
-      const { x: width, y: height } = this.dimensions;
-      const doublePadding = this._opts.padding * 2;
-
-      if (width >= height) {
-        const percentage = canvasWidth * 100 / width;
-        const ratioPercentage = height * 100 / width;
-        return {
-          width: canvasWidth - doublePadding,
-          height: height * percentage / 100 - (doublePadding) * (ratioPercentage / 100)
-        }
-      }
-
-      const percentage = canvasHeight * 100 / height;
-      const ratioPercentage = width * 100 / height;
-      return {
-        width: width * percentage / 100 - (doublePadding) * (ratioPercentage / 100),
-        height: canvasHeight - doublePadding
-      }
-    }
-
-    calculateSize(...args) {
-      if (this._opts.scale === 'cover') {
-        return this.calculateSizeToCover(...args);
-      }
-      if (this._opts.scale === 'contain') {
-        return this.calculateSizeToContain(...args);
-      }
-      throw new Error('`scale` must be either `cover` or `contain`')
+        },
+        image: { width, height }
+      });
     }
 
     onLoad() {

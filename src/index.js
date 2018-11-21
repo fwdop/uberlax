@@ -1,10 +1,8 @@
 import createRenderer from './renderer';
-import createMath from './math';
 import createObserver from './observer';
 
 const init = async (elem, config) => {
-  const math = await createMath(config.enableWasm);
-  const Renderer = createRenderer(math);
+  const Renderer = createRenderer();
 
   let loopStarted = false;
 
@@ -40,10 +38,7 @@ const init = async (elem, config) => {
 
   elem.appendChild(canvas);
 
-  const renderer = new Renderer(ctx, config.images, {
-    ...(config || {}),
-    backgroundColor: 'rgba(255, 255, 255, 0)'
-  });
+  const renderer = new Renderer(ctx, config.images, config);
 
   const updateScroll = (passedScrollPercentage) => {
     scrollPercentage = passedScrollPercentage;
@@ -87,7 +82,7 @@ const init = async (elem, config) => {
 
   if (config.update !== false) {
     const observer = await createObserver(config.observer);
-    observer(elem, math, updateScroll);
+    observer(elem, updateScroll);
   }
 }
 
@@ -97,8 +92,8 @@ module.exports = (elem, passedConfig) => {
   }
 
   const defaultConfig = {
-    enableWasm: false,
-    observer: 'scroll'
+    observer: 'scroll',
+    backgroundColor: 'rgba(255, 255, 255, 0)'
   };
 
   const config = {
