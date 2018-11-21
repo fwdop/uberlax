@@ -1,7 +1,7 @@
 import createRenderer from './renderer';
 import createObserver from './observer';
 
-const init = async (passedElem, config) => {
+const init = (passedElem, config) => {
   const Renderer = createRenderer();
   const elem = passedElem;
   let loopStarted = false;
@@ -81,9 +81,13 @@ const init = async (passedElem, config) => {
   });
 
   if (config.update !== false) {
-    const observer = await createObserver(config.observer);
-    observer(elem, updateScroll);
+    return createObserver(config.observer).then((observer) => {
+      observer(elem, updateScroll);
+      return undefined;
+    });
   }
+
+  return Promise.resolve();
 };
 
 module.exports = (elem, passedConfig) => {
