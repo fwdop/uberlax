@@ -13,6 +13,7 @@
     "build-release": "rm -rf ./dist && npm run build && npm run build-demo && npm run build-iframe && cp -R ./demo-dist ./dist/demo && cp -R ./iframe-dist ./dist/iframe",
     "lint": "eslint src",
     "test": "npm run lint",
+    "prepublish": "npm run build-release",
     "create-release-zip": "zip -r uberlax.zip ./dist/*",
     "create-release-travis": "rm -rf release/$npm_package_version && prepare-release --version $npm_package_version --input ./dist --output ./release"
   },
