@@ -1,32 +1,32 @@
 const ratios = {
-  cover: function (wRatio, hRatio) {
+  cover(wRatio, hRatio) {
     return Math.max(wRatio, hRatio);
   },
 
-  contain: function (wRatio, hRatio) {
+  contain(wRatio, hRatio) {
     return Math.min(wRatio, hRatio);
   },
 
-  stretch: function (wRatio, hRatio) {
+  stretch(wRatio, hRatio) {
     return { width: wRatio, height: hRatio };
-  }
+  },
 };
 
 module.exports = {
   getImageSize: (options) => {
     const r = ratios[options.scale](
       options.container.width / options.image.width,
-      options.container.height / options.image.height
+      options.container.height / options.image.height,
     );
 
     return {
       width: options.image.width * (r.width || r),
-      height: options.image.height * (r.height || r)
+      height: options.image.height * (r.height || r),
     };
   },
-  calculatePositionByPercentage: (start, moveTo, percentage) => {
-    return (moveTo * percentage / 100.0) + start;
-  },
+  calculatePositionByPercentage: (start, moveTo, percentage) => (
+    (moveTo * percentage / 100.0) + start
+  ),
   calculateScrollPercentage: (elementHeight, elementTop) => {
     if (elementTop >= 0) {
       return 0;
@@ -42,5 +42,5 @@ module.exports = {
   },
   calculateFadeInOpacity(fadeIn, percentage) {
     return (fadeIn) / (100 / (percentage));
-  }
-}
+  },
+};

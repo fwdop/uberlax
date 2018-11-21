@@ -2,7 +2,7 @@ import {
   getImageSize,
   calculatePositionByPercentage,
   calculateFadeOutOpacity,
-  calculateFadeInOpacity
+  calculateFadeInOpacity,
 } from './util/math';
 
 export default () => {
@@ -21,15 +21,15 @@ export default () => {
         animation: {
           moveX: 0,
           moveY: 0,
-          ...opts.animation
-        }
+          ...opts.animation,
+        },
       };
 
       this.startX = 0;
       this.startY = 0;
 
       this._loadPromise = new Promise((resolve) => {
-        this._image.addEventListener("load", resolve, false);
+        this._image.addEventListener('load', resolve, false);
       });
 
       this._loadPromise.then(() => {
@@ -41,8 +41,8 @@ export default () => {
     get dimensions() {
       return {
         x: this.width,
-        y: this.height
-      }
+        y: this.height,
+      };
     }
 
     calculateSize(canvasWidth, canvasHeight) {
@@ -56,9 +56,9 @@ export default () => {
         scale: this._opts.scale,
         container: {
           width: canvasWidth,
-          height: canvasHeight
+          height: canvasHeight,
         },
-        image: { width, height }
+        image: { width, height },
       });
     }
 
@@ -69,10 +69,12 @@ export default () => {
     request(canvasHeight, canvasWidth, scrollPercentage = 0) {
       const { width, height } = this.calculateSize(canvasWidth, canvasHeight);
       const { animation, center } = this._opts;
-      const { moveY, moveX, fadeOut, fadeIn } = animation;
+      const {
+        moveY, moveX, fadeOut, fadeIn,
+      } = animation;
       let {
         startY: newPosY,
-        startX: newPosX
+        startX: newPosX,
       } = this;
       let offsetY = 0;
       let offsetX = 0;
@@ -99,16 +101,18 @@ export default () => {
         y: newPosY,
         width,
         height,
-        opacity
-      }
+        opacity,
+      };
     }
 
     render(ctx, scrollPercentage = 0, debug = false) {
       const canvasHeight = ctx.canvas.height;
       const canvasWidth = ctx.canvas.width;
 
-      const { x, y, width, height, opacity } = this.request(
-        canvasHeight, canvasWidth, scrollPercentage
+      const {
+        x, y, width, height, opacity,
+      } = this.request(
+        canvasHeight, canvasWidth, scrollPercentage,
       );
 
       if (opacity < 1) {
@@ -116,7 +120,7 @@ export default () => {
       }
 
       ctx.drawImage(
-        this._image, x, y, width, height
+        this._image, x, y, width, height,
       );
 
       if (opacity < 1) {
@@ -124,7 +128,7 @@ export default () => {
       }
 
       if (debug) {
-        ctx.strokeStyle = "rgb(200, 0, 0)";
+        ctx.strokeStyle = 'rgb(200, 0, 0)';
         ctx.strokeRect(x, y, width, height);
       }
     }
@@ -144,22 +148,26 @@ export default () => {
 
       this._loadPromise = Promise.all(this._components.map(image => image.onLoad()));
     }
+
     onLoad() {
       return this._loadPromise;
     }
+
     _clearCanvas() {
       this._ctx.clearRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
     }
+
     _paintBaseLayer() {
       this._ctx.fillStyle = this._opts.backgroundColor;
       this._ctx.fillRect(0, 0, this._ctx.canvas.width, this._ctx.canvas.height);
     }
+
     render(scrollPercentage = 0) {
       this._clearCanvas();
       this._paintBaseLayer();
       this._components.forEach(
-        element => element.render(this._ctx, scrollPercentage, this._debug)
+        element => element.render(this._ctx, scrollPercentage, this._debug),
       );
     }
-  }
-}
+  };
+};

@@ -1,9 +1,9 @@
 import createRenderer from './renderer';
 import createObserver from './observer';
 
-const init = async (elem, config) => {
+const init = async (passedElem, config) => {
   const Renderer = createRenderer();
-
+  const elem = passedElem;
   let loopStarted = false;
 
   elem.innerHTML = '';
@@ -15,18 +15,21 @@ const init = async (elem, config) => {
   let dpr = 1;
 
   if (config.detectHighDpi) {
-    dpr = window.devicePixelRatio;
+    dpr = global.window.devicePixelRatio;
   }
 
   const ctx = canvas.getContext('2d');
   ctx.scale(dpr, dpr);
+
+  elem.appendChild(canvas);
+
+  const renderer = new Renderer(ctx, config.images, config);
 
   const recalculate = () => {
     let { width, height } = elem.getBoundingClientRect();
 
     height = Math.ceil(height);
     width = Math.ceil(width);
-    const initialTop = Math.max(initialTop, 0);
 
     canvas.width = width * dpr;
     canvas.height = height * dpr;
@@ -34,11 +37,31 @@ const init = async (elem, config) => {
     renderer.render(scrollPercentage);
   };
 
-  window.addEventListener('resize', recalculate);
+  const startLoop = () => {
+    let requestId = null;
+    loopStarted = true;
+    let lastScrollPercentage = 0;
+    (function loop() {
+      if (!loopStarted && requestId) {
+        global.window.cancelAnimationFrame(requestId);
+        return;
+      }
+      requestId = global.window.requestAnimationFrame(() => {
+        if (lastScrollPercentage !== scrollPercentage) {
+          renderer.render(scrollPercentage);
+          lastScrollPercentage = scrollPercentage;
+        }
+        loop();
+      });
+    }());
+  };
 
-  elem.appendChild(canvas);
+  const stopLoop = () => {
+    loopStarted = false;
+  };
 
-  const renderer = new Renderer(ctx, config.images, config);
+  global.window.addEventListener('resize', recalculate);
+
 
   const updateScroll = (passedScrollPercentage) => {
     scrollPercentage = passedScrollPercentage;
@@ -51,30 +74,7 @@ const init = async (elem, config) => {
     if (!loopStarted) {
       startLoop();
     }
-  }
-
-  const startLoop = () => {
-    let requestId = null;
-    loopStarted = true;
-    let lastScrollPercentage = 0;
-    (function loop() {
-      if (!loopStarted && requestId) {
-        cancelAnimationFrame(requestId);
-        return;
-      }
-      requestId = requestAnimationFrame(() => {
-        if (lastScrollPercentage !== scrollPercentage) {
-          renderer.render(scrollPercentage);
-          lastScrollPercentage = scrollPercentage;
-        }
-        loop();
-      });
-    })();
-  }
-
-  const stopLoop = () => {
-    loopStarted = false;
-  }
+  };
 
   renderer.onLoad().then(() => {
     recalculate();
@@ -84,7 +84,7 @@ const init = async (elem, config) => {
     const observer = await createObserver(config.observer);
     observer(elem, updateScroll);
   }
-}
+};
 
 module.exports = (elem, passedConfig) => {
   if (!elem) {
@@ -93,13 +93,13 @@ module.exports = (elem, passedConfig) => {
 
   const defaultConfig = {
     observer: 'scroll',
-    backgroundColor: 'rgba(255, 255, 255, 0)'
+    backgroundColor: 'rgba(255, 255, 255, 0)',
   };
 
   const config = {
     ...defaultConfig,
-    ...passedConfig
-  }
+    ...passedConfig,
+  };
 
   init(elem, config);
 };

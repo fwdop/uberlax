@@ -1,0 +1,12 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "globals": {
+    "Image": true,
+    "IntersectionObserver": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "no-plusplus": 0
+  }
+}

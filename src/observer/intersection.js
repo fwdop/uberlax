@@ -1,10 +1,10 @@
 module.exports = (elem, callback) => {
   function buildThresholdList() {
-    var thresholds = [];
-    var numSteps = 10000;
+    const thresholds = [];
+    const numSteps = 10000;
 
-    for (var i = 1.0; i <= numSteps; i++) {
-      var ratio = i / numSteps;
+    for (let i = 1.0; i <= numSteps; i++) {
+      const ratio = i / numSteps;
       thresholds.push(ratio);
     }
 
@@ -15,19 +15,20 @@ module.exports = (elem, callback) => {
   function handleIntersect(entries) {
     const { top } = elem.getBoundingClientRect();
     if (top > 0) {
-      return callback(0);
+      callback(0);
+      return;
     }
-    entries.forEach(function (entry) {
+    entries.forEach((entry) => {
       callback(100 - (entry.intersectionRatio * 100));
     });
   }
 
-  var options = {
+  const options = {
     root: null,
-    rootMargin: "0px",
-    threshold: buildThresholdList()
+    rootMargin: '0px',
+    threshold: buildThresholdList(),
   };
 
-  observer = new IntersectionObserver(handleIntersect, options);
+  const observer = new IntersectionObserver(handleIntersect, options);
   observer.observe(elem);
-}
+};
