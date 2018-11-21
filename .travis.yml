@@ -15,6 +15,7 @@ deploy:
     bucket: uberlax.fwdop.cloud
     local-dir: "./releases/*"
     acl: public_read
+    skip_cleanup: true
     on:
       tags: true
   - provider: releases
