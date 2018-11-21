@@ -21,7 +21,26 @@ module.exports = {
 
     return {
       width: options.image.width * (r.width || r),
-      height: options.image.height * (r.height || r),
+      height: options.image.height * (r.width || r),
+    };
+  },
+  applyPadding: ({ width, height }, padding) => {
+    const doublePadding = padding * 2;
+
+    if (width >= height) {
+      const ratioPercentage = height / width;
+
+      return {
+        width: width - doublePadding,
+        height: height - doublePadding * ratioPercentage,
+      };
+    }
+
+    const ratioPercentage = height / width;
+
+    return {
+      width: width - doublePadding * ratioPercentage,
+      height: height - doublePadding,
     };
   },
   calculatePositionByPercentage: (start, moveTo, percentage) => (

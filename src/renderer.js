@@ -3,6 +3,7 @@ import {
   calculatePositionByPercentage,
   calculateFadeOutOpacity,
   calculateFadeInOpacity,
+  applyPadding,
 } from './util/math';
 
 export default () => {
@@ -52,14 +53,14 @@ export default () => {
         throw new Error('`scale` must be either `cover`, `contain` or `stretch`');
       }
 
-      return getImageSize({
+      return applyPadding(getImageSize({
         scale: this._opts.scale,
         container: {
           width: canvasWidth,
           height: canvasHeight,
         },
         image: { width, height },
-      });
+      }), this._opts.padding);
     }
 
     onLoad() {
