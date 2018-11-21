@@ -7,10 +7,14 @@
     "build": "parcel build ./src/index.js --global uberlax --out-file uberlax.js --no-source-maps",
     "build-unminified": "parcel build ./src/index.js --global uberlax --out-file uberlax.js --no-minify",
     "start": "parcel index.html --out-dir ./demo",
-    "build-demo": "rm -rf ./demo-dist && parcel build index.html --cache-dir ./.cache-demo-dist --out-dir ./demo-dist --public-url ./",
+    "build-demo": "rm -rf ./demo-dist && parcel build index.html --cache-dir ./.cache-demo-dist --out-dir ./demo-dist --public-url ./ --no-source-maps",
     "watch-iframe": "parcel ./iframe/iframe.html --out-dir ./iframe-dist --public-url ./",
+    "build-iframe": "parcel build ./iframe/iframe.html --out-dir ./iframe-dist --out-file index.html --public-url ./ --no-source-maps",
+    "build-release": "rm -rf ./dist && npm run build && npm run build-demo && npm run build-iframe && cp -R ./demo-dist ./dist/demo && cp -R ./iframe-dist ./dist/iframe",
     "lint": "eslint src",
-    "test": "npm run lint && npm run build"
+    "test": "npm run lint",
+    "create-release-zip": "zip -r uberlax.zip ./dist/*",
+    "create-release-travis": "rm -rf release/$npm_package_version && prepare-release --version $npm_package_version --input ./dist --output ./release"
   },
   "author": "Julian Hollmann <julian@fwdoperating.com>",
   "devDependencies": {
@@ -22,6 +26,7 @@
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
     "parcel-bundler": "^1.10.3",
+    "prepare-release": "^1.1.1",
     "sass": "^1.15.1"
   },
   "dependencies": {

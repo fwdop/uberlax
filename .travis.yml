@@ -3,3 +3,24 @@ node_js:
 - stable
 - '10'
 - '8'
+script:
+- npm run lint
+- npm run build-release
+before_deploy: npm run create-release-travis
+deploy:
+  - provider: s3
+    access_key_id: AKIAJ5ZQM32M7MGKTP6A
+    secret_access_key:
+      secure: BlL+PUrCVcGwH8a9aEJhMQCXwSxCWpE0YViCDxvyZ0LS/hlZJG/mz9o+TO2yO6YERdcsa3aXf8qQdfycknHwrl1MapR2KLx/CLjzacyvNLB6uoccZzMn+oFC7np968I8aZuAltUTErrkJD4cvYLHWovQjIFYRcpfokGr+ooiGpCxmn92KtrMHcTwYhHLI6vmVHM3bR58MWkgHNGBcidi5msNgu4EMOAhmbYPstx6CahXqIvXsXjG6NXcCbs0uNw/Jqrq6R1EleWp5kd+CRXhzrccVRKDZZBoQ6xexw2pIIcgpwztwPIND+Ke/Y6F9waqtIkcCQvUXKi/jDMvDggLqI8YdXmkER5BJ5k4c7GPfNjad0lWWkx7aW8E7HA0U3Ncqig1Wd6gi0SXBqQlcoU7hxNeosh7LPiRj5n8TDVr8hS3Q6lvUmzmr6ZoDaNyksuSH2Y7NjZ/qV3AEI9s3t2XC9EWbLNLlo+vZQf42l8WgmTqRTs6iV0bOiGeGZdE1HshXQNDeHqxNLmNPMofDboO1LuCD55bebJ37VYRcEtSKfm4757amqOu3H1yyr3902rA7rXxqf5EgPfLM99p2ZTmCkvy6JU0eZruaZvs3uI+AvR4b/9RZV0s/n9NS1uW65lwci//qnoPQZF+3XxuCqQKr0yMTtSJoFS+ofrahLj9M9c=
+    bucket: uberlax.fwdop.cloud
+    local-dir: "./releases/*"
+    acl: public_read
+    on:
+      tags: true
+  - provider: releases
+    api_key:
+      secure: WCMSzhjkFeD6PkOxVGcwM5kZYdaJdgxoEtxaPQTQrXytYVku94Q4c3ee7gbsCoXiBul2FyK3rUWURje6y5Y+hZ52zwDWDBvzEwogAbbJ20g2zcSO/nWG9NRV5YiImcy7didxeC3WPC6aP73T0tASYpbX5LVg9fErBDkH0r/lgM7zoRURHQMl3uIJOdb5CIXaqQ8Heg/4R7tdWMWb6GWKNZ7y1e74Vyuun+e3SrBPlXuAVqjyWHk3bfhPFLrvJOVTbfIrrOjraH+7MK8H5tULO5p0CUbuon6dsuCrn4bXtWgU2Qji4X0zw4J9M5Tf9XsXYqfL6vnu5b7MhNqD/3khIYb/18RaHEDM8tx6qLx9I4Im42VKIJOy9fiWevogeruKDKt+fNLQQmJRFcFKfVgIelnHvI/0ivpMy3mbE5dYIdpniGaO6C9N/FjgN18YVg7ye7/ReQxKg7wRhni/oaJRSijctglmXpd4+b6HTgctObJ1aRtfiwcdIQeX4teJjd8AVOQkUvb7a4VVKbSbCgjM5hnCcz5u2WOfQdEx2SuhlP1fV+RKPmIPDokpa6YfsAMc451k5iU6q8KiJc1YqscK0zdyTXyjH1UwbAjbbA424GjZTtmBGS+hk3UuQmiskADPH4/twCwbUb1TO2ZxmbEQiJJtZ07L6WJUyIxofwUac1M=
+    file: ./uberlax.zip
+    skip_cleanup: true
+    on:
+      tags: true
