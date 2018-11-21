@@ -13,7 +13,7 @@ deploy:
     secret_access_key:
       secure: BlL+PUrCVcGwH8a9aEJhMQCXwSxCWpE0YViCDxvyZ0LS/hlZJG/mz9o+TO2yO6YERdcsa3aXf8qQdfycknHwrl1MapR2KLx/CLjzacyvNLB6uoccZzMn+oFC7np968I8aZuAltUTErrkJD4cvYLHWovQjIFYRcpfokGr+ooiGpCxmn92KtrMHcTwYhHLI6vmVHM3bR58MWkgHNGBcidi5msNgu4EMOAhmbYPstx6CahXqIvXsXjG6NXcCbs0uNw/Jqrq6R1EleWp5kd+CRXhzrccVRKDZZBoQ6xexw2pIIcgpwztwPIND+Ke/Y6F9waqtIkcCQvUXKi/jDMvDggLqI8YdXmkER5BJ5k4c7GPfNjad0lWWkx7aW8E7HA0U3Ncqig1Wd6gi0SXBqQlcoU7hxNeosh7LPiRj5n8TDVr8hS3Q6lvUmzmr6ZoDaNyksuSH2Y7NjZ/qV3AEI9s3t2XC9EWbLNLlo+vZQf42l8WgmTqRTs6iV0bOiGeGZdE1HshXQNDeHqxNLmNPMofDboO1LuCD55bebJ37VYRcEtSKfm4757amqOu3H1yyr3902rA7rXxqf5EgPfLM99p2ZTmCkvy6JU0eZruaZvs3uI+AvR4b/9RZV0s/n9NS1uW65lwci//qnoPQZF+3XxuCqQKr0yMTtSJoFS+ofrahLj9M9c=
     bucket: uberlax.fwdop.cloud
-    local-dir: "./releases/*"
+    local-dir: "./releases"
     acl: public_read
     skip_cleanup: true
     on:
