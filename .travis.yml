@@ -16,6 +16,8 @@ deploy:
     local-dir: "./release"
     acl: public_read
     skip_cleanup: true
+    region: "eu-west-1"
+    cache_control: "max-age=31536000"
     on:
       tags: true
   - provider: releases
