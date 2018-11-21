@@ -9,7 +9,8 @@
     "start": "parcel index.html --out-dir ./demo",
     "build-demo": "rm -rf ./demo-dist && parcel build index.html --cache-dir ./.cache-demo-dist --out-dir ./demo-dist --public-url ./",
     "watch-iframe": "parcel ./iframe/iframe.html --out-dir ./iframe-dist --public-url ./",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "npm run lint && npm run build"
   },
   "author": "Julian Hollmann <julian@fwdoperating.com>",
   "devDependencies": {
