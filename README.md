@@ -10,6 +10,9 @@ A high-performance canvas based parallax library
 - Supported transitions: `moveX`, `moveY`, `fadeIn`, `fadeOut`
 - `<iframe>` support with `IntersectionObserver`
 
+## Demo
+A demo displaying some of the features can be [found here](https://uberlax.fwdop.cloud/0.0.2/demo/index.html)
+
 ## Example
 
 ```javascript
